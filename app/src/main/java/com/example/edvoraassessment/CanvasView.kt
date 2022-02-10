@@ -18,6 +18,7 @@ const val PENCIL = "canvasState"
 const val ARROW = "arrow"
 const val CIRCLE = "circle"
 const val SQUARE = "square"
+const val COLOR = "color"
 
 
 class CanvasView @JvmOverloads constructor(
@@ -29,7 +30,7 @@ class CanvasView @JvmOverloads constructor(
     private val touchTolerance = ViewConfiguration.get(context).scaledEdgeSlop
     private lateinit var firstCanvas: Canvas
     private lateinit var firstBitmap: Bitmap
-    var radius = 8f
+    private var radius = 8f
 
     //pen color
     private val penColor = ResourcesCompat.getColor(resources, R.color.black, null)
@@ -61,6 +62,7 @@ class CanvasView @JvmOverloads constructor(
         firstCanvas.drawColor(backgroundColor)
     }
 
+    //function to draw shapes
     override fun onDraw(canvas: Canvas?) {
         super.onDraw(canvas)
 
@@ -85,14 +87,19 @@ class CanvasView @JvmOverloads constructor(
                 canvas?.drawCircle(480f, 800f, 50f, paint)
                 canvas?.drawOval(75f, 500f, 150f, 100f, paint)
             }
+            COLOR -> {
+                invalidate()
+            }
         }
     }
 
+    //controls color change
     fun setColor(color: Int){
         paint.color = color
         invalidate()
     }
-
+    
+    //controls onDraw movement
     override fun onTouchEvent(event: MotionEvent?): Boolean {
 
         motionX = event!!.x

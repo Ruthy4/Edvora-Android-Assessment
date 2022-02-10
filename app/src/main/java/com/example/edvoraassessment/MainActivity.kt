@@ -39,6 +39,7 @@ class MainActivity : AppCompatActivity() {
     private fun setUpViewElement() {
 
         binding.colorPaletteLayout.setOnClickListener {
+            canvasState = COLOR
             toggleOnSpecificLayout(it, binding.colorPaletteImageView)
             toggleColorPaletteImageView()
         }
