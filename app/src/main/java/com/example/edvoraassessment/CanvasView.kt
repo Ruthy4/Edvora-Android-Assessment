@@ -66,24 +66,24 @@ class CanvasView @JvmOverloads constructor(
 
         when(canvasState) {
             PENCIL -> {
+                invalidate()
                 canvas?.drawBitmap(firstBitmap, 0f, 0f, null)
             }
             ARROW -> {
-
+                invalidate()
+                canvas?.drawBitmap(firstBitmap, 0f, 0f, null)
             }
             SQUARE -> {
+                invalidate()
                 canvas?.drawRect(100f, 50f, 300f, 300f, paint)
-                canvas?.drawRect(87f, 173f, 41f, 210f, paint)
+                canvas?.drawRect(250f, 600f, 500f, 800f, paint)
+                canvas?.drawRect(210f, 500f, 500f, 400f, paint)
             }
             CIRCLE -> {
-//                canvas?.drawCircle(60f, 50f, 25f, paint)
-
-                val width = width.toFloat()
-                val height = height.toFloat()
-                val cX = width.div(2)
-                val cY = height.div(2)
-
-                canvas?.drawCircle(cX, cY, radius/2, paint)
+                invalidate()
+                canvas?.drawCircle(280f, 700f, 100f, paint)
+                canvas?.drawCircle(480f, 800f, 50f, paint)
+                canvas?.drawOval(75f, 500f, 150f, 100f, paint)
             }
         }
     }

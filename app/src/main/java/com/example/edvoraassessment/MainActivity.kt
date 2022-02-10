@@ -1,17 +1,19 @@
 package com.example.edvoraassessment
 
+import android.graphics.drawable.GradientDrawable
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
 import android.widget.ImageView
 import androidx.core.content.ContextCompat
 import androidx.core.content.res.ResourcesCompat
-import androidx.core.graphics.drawable.DrawableCompat
 import com.example.edvoraassessment.databinding.ActivityMainBinding
+import java.util.*
 
 class MainActivity : AppCompatActivity() {
-    lateinit var binding: ActivityMainBinding
-    lateinit var list: List<ImageView>
+    private lateinit var binding: ActivityMainBinding
+    private var isColorPaletteVisible = false
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -24,41 +26,49 @@ class MainActivity : AppCompatActivity() {
 
     }
 
+    private fun toggleColorPaletteImageView() {
+        isColorPaletteVisible = !isColorPaletteVisible
+        if (isColorPaletteVisible){
+            binding.colorSet.visibility = View.VISIBLE
+        } else {
+            binding.colorSet.visibility = View.GONE
+        }
+    }
+
     //image view elements
     private fun setUpViewElement() {
-        binding.apply {
-            list = listOf(
-                pencilImageView,
-                arrowImageView,
-                squareImageView,
-                circleImageView,
-                colorPaletteImageView
-            )
+
+        binding.colorPaletteLayout.setOnClickListener {
+            toggleOnSpecificLayout(it, binding.colorPaletteImageView)
+            toggleColorPaletteImageView()
         }
 
-        binding.colorPaletteImageView.setOnClickListener {
-            buttonPressed(it)
-            binding.colorSet.visibility = View.VISIBLE
-        }
-
-        binding.pencilImageView.setOnClickListener {
+        binding.pencilLayout.setOnClickListener {
             canvasState = PENCIL
-            buttonPressed(it)
+            binding.colorSet.visibility = View.GONE
+            isColorPaletteVisible = false
+            toggleOnSpecificLayout(it, binding.pencilImageView)
         }
 
-        binding.arrowImageView.setOnClickListener {
+        binding.arrowLayout.setOnClickListener {
             canvasState = ARROW
-            buttonPressed(it)
+            binding.colorSet.visibility = View.GONE
+            isColorPaletteVisible = false
+            toggleOnSpecificLayout(it, binding.arrowImageView)
         }
 
-        binding.squareImageView.setOnClickListener {
+        binding.squareLayout.setOnClickListener {
             canvasState = SQUARE
-            buttonPressed(it)
+            binding.colorSet.visibility = View.GONE
+            isColorPaletteVisible = false
+            toggleOnSpecificLayout(it, binding.squareImageView)
         }
 
-        binding.circleImageView.setOnClickListener {
+        binding.circleLayout.setOnClickListener {
             canvasState = CIRCLE
-            buttonPressed(it)
+            binding.colorSet.visibility = View.GONE
+            isColorPaletteVisible = false
+            toggleOnSpecificLayout(it, binding.circleImageView)
         }
     }
 
@@ -85,19 +95,50 @@ class MainActivity : AppCompatActivity() {
     }
 
     // add selector background on click
-    private fun buttonPressed(view: View) {
-        clearSelectedState()
-        view.isSelected = true
-        view.setBackgroundResource(R.drawable.icon_selected_background)
-    }
+    private fun toggleOffAllLayouts() {
 
-    //clear selection
-    private fun clearSelectedState() {
-        list.forEach {
-            it.isSelected = false
-            it.setBackgroundResource(R.drawable.icon_unselected_background)
-            binding.colorSet.visibility = View.GONE
-            it.colorFilter = null
+        binding.apply {
+            setViewBackgroundColor(pencilLayout, R.color.light_ash)
+            setViewBackgroundColor(arrowLayout, R.color.light_ash)
+            setViewBackgroundColor(squareLayout, R.color.light_ash)
+            setViewBackgroundColor(circleLayout, R.color.light_ash)
+            setViewBackgroundColor(colorPaletteLayout, R.color.light_ash)
+            pencilImageView.setColorFilter(ContextCompat.getColor(
+                this@MainActivity, R.color.icon_default_color))
+            arrowImageView.setColorFilter(ContextCompat.getColor(
+                this@MainActivity, R.color.icon_default_color))
+            squareImageView.setColorFilter(ContextCompat.getColor(
+                this@MainActivity, R.color.icon_default_color))
+            circleImageView.setColorFilter(ContextCompat.getColor(
+                this@MainActivity, R.color.icon_default_color))
+            colorPaletteImageView.setColorFilter(ContextCompat.getColor(
+                this@MainActivity, R.color.icon_default_color))
         }
     }
+
+    private fun setViewBackgroundColor(view: View, backgroundColor: Int) {
+        val drawable: GradientDrawable = view.background as GradientDrawable
+        drawable.setColor( ContextCompat.getColor(this@MainActivity,
+            backgroundColor))
+    }
+
+    private fun toggleOnSpecificLayout(backgroundView: View, imageView: ImageView) {
+        toggleViewBackground(object : ViewCallback {
+            override fun toggleBackground() {
+                toggleOffAllLayouts()
+            }
+        })
+        imageView.setColorFilter(ContextCompat.getColor(
+            this@MainActivity, R.color.black))
+        setViewBackgroundColor(backgroundView, R.color.dark_ash)
+    }
+
+
+    private fun toggleViewBackground(viewCallback: ViewCallback) {
+        viewCallback.toggleBackground()
+    }
+}
+
+interface ViewCallback {
+    fun toggleBackground()
 }
