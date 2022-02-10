@@ -37,6 +37,7 @@ class MainActivity : AppCompatActivity() {
         }
 
         binding.colorPaletteImageView.setOnClickListener {
+            canvasState = COLOR
             buttonPressed(it)
             binding.colorSet.visibility = View.VISIBLE
         }

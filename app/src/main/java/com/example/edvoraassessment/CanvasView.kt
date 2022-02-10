@@ -18,6 +18,7 @@ const val PENCIL = "canvasState"
 const val ARROW = "arrow"
 const val CIRCLE = "circle"
 const val SQUARE = "square"
+const val COLOR = "color"
 
 
 class CanvasView @JvmOverloads constructor(
@@ -29,7 +30,7 @@ class CanvasView @JvmOverloads constructor(
     private val touchTolerance = ViewConfiguration.get(context).scaledEdgeSlop
     private lateinit var firstCanvas: Canvas
     private lateinit var firstBitmap: Bitmap
-    var radius = 8f
+    private var radius = 8f
 
     //pen color
     private val penColor = ResourcesCompat.getColor(resources, R.color.black, null)
@@ -61,38 +62,44 @@ class CanvasView @JvmOverloads constructor(
         firstCanvas.drawColor(backgroundColor)
     }
 
+    //function to draw shapes
     override fun onDraw(canvas: Canvas?) {
         super.onDraw(canvas)
 
         when(canvasState) {
             PENCIL -> {
+                invalidate()
                 canvas?.drawBitmap(firstBitmap, 0f, 0f, null)
             }
             ARROW -> {
-
+                invalidate()
+                canvas?.drawBitmap(firstBitmap, 0f, 0f, null)
             }
             SQUARE -> {
+                invalidate()
                 canvas?.drawRect(100f, 50f, 300f, 300f, paint)
-                canvas?.drawRect(87f, 173f, 41f, 210f, paint)
+                canvas?.drawRect(250f, 600f, 500f, 800f, paint)
+                canvas?.drawRect(210f, 500f, 500f, 400f, paint)
             }
             CIRCLE -> {
-//                canvas?.drawCircle(60f, 50f, 25f, paint)
-
-                val width = width.toFloat()
-                val height = height.toFloat()
-                val cX = width.div(2)
-                val cY = height.div(2)
-
-                canvas?.drawCircle(cX, cY, radius/2, paint)
+                invalidate()
+                canvas?.drawCircle(280f, 700f, 100f, paint)
+                canvas?.drawCircle(480f, 800f, 50f, paint)
+                canvas?.drawOval(75f, 500f, 150f, 100f, paint)
+            }
+            COLOR -> {
+                invalidate()
             }
         }
     }
 
+    //controls color change
     fun setColor(color: Int){
         paint.color = color
         invalidate()
     }
-
+    
+    //controls onDraw movement
     override fun onTouchEvent(event: MotionEvent?): Boolean {
 
         motionX = event!!.x
